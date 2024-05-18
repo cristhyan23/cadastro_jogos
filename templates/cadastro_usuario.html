@@ -1,0 +1,27 @@
+{% extends "template.html"%}
+{%block conteudo %}
+
+<div class="container">
+
+<form action="/cadastrar_usuario" method="post">
+    <fildset>
+        <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" class="form-control" placeholder="Nome do Usuario" required>
+        </div>
+        <div class="form-group">
+            <label for="usuario">Usuario</label>
+            <input type="text" id="usuario" name="usuario" class="form-control" placeholder="Usuario" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" class="form-control" placeholder="Senha" required>
+        </div>
+
+    <button type="submit" class="btn btn-primary btn-salvar">Salvar</button>
+    </fildset>
+</form>
+</div>
+
+{%endblock %}

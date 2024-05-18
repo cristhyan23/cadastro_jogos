@@ -1,0 +1,17 @@
+{% extends "template.html"%}
+{%block conteudo %}
+
+<div class="container">
+    <h1>Faça seu login</h1>
+    <form method="POST" action="/autenticar">
+        <p><label>Nome de usuário:</label> <input class="form-control" type="text" name="usuario"></p>
+        <p><label>Senha:</label> <input class="form-control" type="password" name="senha"></p>
+        <p><button class="btn btn-primary" type="submit">Entrar</button></p>    
+    </form>
+    <form action="/cadastro_usuario">
+        <p><button class="btn btn-primary" type="submit">Cadastrar Usuário</button></p>
+    </form>
+
+</div>
+
+{%endblock %}

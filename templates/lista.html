@@ -1,0 +1,39 @@
+{% extends "template.html"%}
+{%block conteudo %}
+
+<table>
+<tr>
+<form action="/ir_cadastro" method="get">
+<th><button type="submit" class="btn btn-primary btn-cadastro">Cadastro</button></th>
+   </form>
+   <form action="/logout" method="get">
+      <th><button type="submit" class="btn btn-primary btn-cadastro">Logout</button></th>
+      </form>
+   </tr>
+</table>
+<table class="table table-striped table-responsive table-bordered">
+         <thead class="thead-default">
+            <tr>
+               <th>Excluir</th>
+               <th>Nome</th>
+               <th>Categoria</th>
+               <th>Console</th>
+            </tr>
+        </thead>
+        <tbody>
+           <tr>
+            {% for index, jogo in enumerate(jogos,0) %}
+            <td>
+               <form action="/excluir_jogo" method="POST">
+                  <button type="submit" name="position"  value="{{index}}" class="btn btn-primary btn-cadastro">del</button>
+               </form>
+            </td>
+              <td>{{jogo.get_name}}</td>
+              <td>{{jogo.get_category}}</td>
+              <td>{{jogo.get_console}}</td>
+           </tr>
+           {% endfor%}
+         </tbody>
+</table>
+
+{%endblock %}
