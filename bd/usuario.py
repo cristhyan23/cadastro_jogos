@@ -88,23 +88,22 @@ class Usuario(IntegracaoBD):
                 cursor.close()
                 self.conexao.close()
 
-    def altera_senha(self,usuario,senha_velha,nova_senha):
+    def alterar_senha(self,usuario,senha_velha,nova_senha):
         try:
             # Criar um cursor
             cursor = self.conexao.cursor()
-            pwd =  hashlib.md5(senha_velha.encode()).hexdigest()
-            # Inserir o novo usuário na tabela "login"
-            sql = "SELECT * FROM login WHERE usuario = %s and senha = %s"
-            valores = (usuario,senha_velha)
-            resultado = cursor.execute(sql, valores)
+            pwd_new = hashlib.md5(nova_senha.encode()).hexdigest()  
+            resultado = self.autentica_usuario(usuario,senha_velha)
             if resultado:
                 sql = "UPDATE login SET senha = %s WHERE usuario = %s"
-                valores = (nova_senha,usuario)
+                valores = (pwd_new,usuario)
+                cursor.execute(sql, valores)
+                self.conexao.commit()
                 return "Senha atualizada com sucesso!"
             else:
-                return "Não foi possível atualizar a senha!"
+                return "Usuário não encontrado ou senha anterior errada"
         except mysql.connector.Error as erro:
-            print("Erro ao deletar usuário:", erro)
+            print("Erro ao encontrar usuário:", erro)
 
         finally:
             # Fechar o cursor e a conexão

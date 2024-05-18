@@ -68,6 +68,9 @@ def login():
 def autenticar():
     usuario = request.form['usuario']
     senha = request.form['senha']
+    if usuario == '' or senha == '':
+        flash("Adicionar dados do usuário e senha")
+        
     valida_usuario = user.autentica_usuario(usuario,senha)
     if valida_usuario:
         session['usuario_logado'] = request.form['usuario']
@@ -89,9 +92,13 @@ def cadastrar_usuario():
     nome = request.form['nome']
     usuario = request.form['usuario']
     senha = request.form['senha']
-    msg = user.criar_usuario(usuario,nome,senha)
-    flash(msg)
-    return redirect("/")
+    if nome == '' or usuario == '' or senha == '':
+        flash("Favor preencher os 3 campos")
+        return redirect("/cadastro_usuario")
+    else:
+        msg = user.criar_usuario(usuario,nome,senha)
+        flash(msg)
+        return redirect("/")
 
 #ROTA PARA DESLOGAR
 @app.route("/logout",methods=['GET',])
@@ -113,7 +120,29 @@ def excluir_jogo():
         return redirect("/lista_jogos")
 
 
+#ROTA IR PARA PAGINA ALTERAR SENHA
+@app.route("/alterar_senha")
+def pagina_altera_senha():
+    return render_template("alterar_senha.html", titulo = 'Alterar Senha')
 
+#ROTA PAGINA ALTERA SENHA PARA RETORNAR PARA LOGIN
+@app.route("/retorna_login")
+def retorna_tela_login():
+    return redirect("/")
+
+#ROTA PARA ALTENTICAR NOVA SENHA
+@app.route("/autenticar_nova_senha",methods=['POST',])
+def altenticar_nova_senha_user():
+    usuario = request.form['usuario']
+    senha_antiga = request.form['senha_antiga']
+    senha_nova = request.form['senha_nova']
+    if usuario == '' or senha_antiga == '' or senha_nova == '':
+        flash("Favor preencher os 3 campos")
+        return redirect("/alterar_senha")
+    else:
+        msg = user.alterar_senha(usuario,senha_antiga,senha_nova)
+        flash(msg)
+        return redirect("/")
 #Roda a aplicação
 if __name__ == "__main__":
     app.run(debug=True)

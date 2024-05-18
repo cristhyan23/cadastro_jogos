@@ -1,0 +1,20 @@
+{% extends "template.html"%}
+{%block conteudo %}
+
+<div class="container">
+    <form method="POST" action="/autenticar_nova_senha">
+        <p><label>Nome de usuário:</label> <input class="form-control" type="text" name="usuario"></p>
+        <p><label>Senha Antiga:</label> <input class="form-control" type="password" name="senha_antiga"></p>
+        <p><label>Nova Senha:</label> <input class="form-control" type="password" name="senha_nova"></p>
+        <p><button class="btn btn-primary" type="submit">Alterar</button></p>    
+    </form>
+
+    <form action="/retorna_login">
+        <p><button class="btn btn-primary" type="submit">Voltar</button></p>
+    </form>
+
+
+
+</div>
+
+{%endblock %}
