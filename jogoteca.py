@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from flask import Flask, render_template,request,redirect,session,flash
+from flask import Flask, render_template,request,redirect,session,flash,url_for
 from bd.jogo import Jogo
 from bd.listador_jogos import ListadorJogos
 from bd.usuario import Usuario
@@ -30,7 +30,7 @@ def login_required(f):
 #lista de jogos
 @app.route("/lista_jogos")
 @login_required
-def index():
+def lista_jogos():
     LISTA_JOGOS = lista_de_jogos()
      # devolve a lista de objeto jogo
     return render_template("lista.html", titulo = 'Jogos', jogos=LISTA_JOGOS,enumerate=enumerate) #mostra pagina html
@@ -38,7 +38,7 @@ def index():
 #ROTA DIRECIONA PARA PAGINA CADASTRO
 @app.route("/ir_cadastro", methods=['GET',])
 def ir_cadastro():
-    return redirect('/cadastro')
+    return redirect(url_for('cadastro'))
 
 #ROTA PAGINA CADASTRO
 @app.route("/cadastro")
@@ -56,7 +56,7 @@ def criar():
     jogo = Jogo(nome, categoria, console,session['usuario_logado'])
     msg = jogo.salvar_jogo_bd() #salva jogo na base de dados
     flash(msg)
-    return redirect("/lista_jogos") 
+    return redirect(url_for("lista_jogos")) 
 
 #PAGINA LOGIN
 @app.route("/")
@@ -75,10 +75,10 @@ def autenticar():
     if valida_usuario:
         session['usuario_logado'] = request.form['usuario']
         flash(f'{session['usuario_logado']} logado com sucesso!')
-        return redirect("/lista_jogos")
+        return redirect(url_for("lista_jogos"))
     else:
         flash('Usuario ou senha invalidos!')
-        return redirect('/')
+        return redirect(url_for('login'))
 
 
 #ROTA PARA DIRECIONAR TELA CADASTRO DE USUÁRIO
@@ -94,11 +94,11 @@ def cadastrar_usuario():
     senha = request.form['senha']
     if nome == '' or usuario == '' or senha == '':
         flash("Favor preencher os 3 campos")
-        return redirect("/cadastro_usuario")
+        return redirect(url_for("cadastro_usuario"))
     else:
         msg = user.criar_usuario(usuario,nome,senha)
         flash(msg)
-        return redirect("/")
+        return redirect(url_for('login'))
 
 #ROTA PARA DESLOGAR
 @app.route("/logout",methods=['GET',])
@@ -106,7 +106,7 @@ def cadastrar_usuario():
 def logout():
     session.pop('usuario_logado', None)
     flash(f'logout efetuado com sucesso')
-    return redirect("/")
+    return redirect(url_for("login"))
 #ROTA PARA ALTERAR SENHA
 
 #ROTA PARA EXCLUIR JOGO DA LISTA
@@ -114,10 +114,10 @@ def logout():
 @login_required
 def excluir_jogo():
         LISTA_JOGOS = lista_de_jogos()
-        index = int(request.form['position'])
-        msg = LISTA_JOGOS[index].deletar_jogo_bd()
+        login = int(request.form['position'])
+        msg = LISTA_JOGOS[login].deletar_jogo_bd()
         flash(msg)
-        return redirect("/lista_jogos")
+        return redirect(url_for("lista_jogos"))
 
 
 #ROTA IR PARA PAGINA ALTERAR SENHA
@@ -128,7 +128,7 @@ def pagina_altera_senha():
 #ROTA PAGINA ALTERA SENHA PARA RETORNAR PARA LOGIN
 @app.route("/retorna_login")
 def retorna_tela_login():
-    return redirect("/")
+    return redirect(url_for("login"))
 
 #ROTA PARA ALTENTICAR NOVA SENHA
 @app.route("/autenticar_nova_senha",methods=['POST',])
@@ -138,11 +138,11 @@ def altenticar_nova_senha_user():
     senha_nova = request.form['senha_nova']
     if usuario == '' or senha_antiga == '' or senha_nova == '':
         flash("Favor preencher os 3 campos")
-        return redirect("/alterar_senha")
+        return redirect(url_for("alterar_senha"))
     else:
         msg = user.alterar_senha(usuario,senha_antiga,senha_nova)
         flash(msg)
-        return redirect("/")
+        return redirect(url_for("login"))
 #Roda a aplicação
 if __name__ == "__main__":
     app.run(debug=True)
