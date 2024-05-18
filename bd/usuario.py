@@ -89,8 +89,29 @@ class Usuario(IntegracaoBD):
                 self.conexao.close()
 
     def altera_senha(self,usuario,senha_velha,nova_senha):
-        pass
-# --------------------- FUNÇÕES PARA GESTÃO TABELA JOGOS -----------------------------#
+        try:
+            # Criar um cursor
+            cursor = self.conexao.cursor()
+            pwd =  hashlib.md5(senha_velha.encode()).hexdigest()
+            # Inserir o novo usuário na tabela "login"
+            sql = "SELECT * FROM login WHERE usuario = %s and senha = %s"
+            valores = (usuario,senha_velha)
+            resultado = cursor.execute(sql, valores)
+            if resultado:
+                sql = "UPDATE login SET senha = %s WHERE usuario = %s"
+                valores = (nova_senha,usuario)
+                return "Senha atualizada com sucesso!"
+            else:
+                return "Não foi possível atualizar a senha!"
+        except mysql.connector.Error as erro:
+            print("Erro ao deletar usuário:", erro)
+
+        finally:
+            # Fechar o cursor e a conexão
+            if 'conexao' in locals() or 'conexao' in globals():
+                cursor.close()
+                self.conexao.close()
+
 
 # Exemplo de uso da função
 if __name__ == '__main__':
