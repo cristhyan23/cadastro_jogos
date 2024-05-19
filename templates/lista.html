@@ -15,6 +15,7 @@
          <thead class="thead-default">
             <tr>
                <th>Excluir</th>
+               <th>Editar</th>
                <th>Nome</th>
                <th>Categoria</th>
                <th>Console</th>
@@ -25,7 +26,12 @@
             {% for index, jogo in enumerate(jogos,0) %}
             <td>
                <form action="/excluir_jogo" method="POST">
-                  <button type="submit" name="position"  value="{{index}}" class="btn btn-primary btn-cadastro">del</button>
+                  <button type="submit" name="position" id="deleta-jogo" value="{{index}}" class="btn btn-primary btn-cadastro">del</button>
+               </form>
+            </td>
+            <td>
+               <form action="/view_editar_jogo" method="GET">
+                  <button type="submit" name="position" value="{{ index }}" class="btn btn-primary btn-cadastro">edit</button>
                </form>
             </td>
               <td>{{jogo.get_name}}</td>
@@ -35,5 +41,13 @@
            {% endfor%}
          </tbody>
 </table>
+
+<script>
+   function copyIndexData() {
+       // Copiar os valores dos campos de login para os campos ocultos no formulário de exclusão
+       document.getElementById('edita-jogo').value = document.getElementById('deleta-jogo').value;
+   
+   }
+</script>
 
 {%endblock %}

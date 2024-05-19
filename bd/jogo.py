@@ -91,6 +91,36 @@ class Jogo(IntegracaoBD):
                 cursor.close()
                 self.conexao.close()
 
+    def edita_jogo(self,novo_nome,nova_categoria,novo_console):
+        try:
+            # Criar um cursor
+            cursor = self.conexao.cursor()
+
+            consulta_id_jogo = "SELECT DISTINCT id FROM jogos WHERE nome = %s and categoria = %s and console = %s"
+            item = (self._nome,self._categoria,self._console)
+            cursor.execute(consulta_id_jogo,item)
+            id_jogo = cursor.fetchone()
+            id_jogo = id_jogo[0]
+            print(f'Usuario:{id_jogo}')
+            # SQL para atualização do jogo
+            sql = """
+            UPDATE jogos
+            SET nome = %s, categoria = %s, console = %s
+            WHERE id = %s 
+            """
+            valores = (novo_nome, nova_categoria, novo_console, id_jogo)
+            cursor.execute(sql, valores)
+            # Commit das mudanças
+            self.conexao.commit()
+            return "Alterações efetuadas com sucesso"
+        except mysql.connector.Error as erro:
+            print("Erro ao deletar jogo:", erro)
+            return "Erro ao atualizar alterações"
+        finally:
+            # Fechar o cursor e a conexão
+            if 'conexao' in locals() or 'conexao' in globals():
+                cursor.close()
+                self.conexao.close()
 
 if __name__ == '__main__':
     jogo = Jogo('God of War2','Rack n Slash','PS2','usuario_teste3')

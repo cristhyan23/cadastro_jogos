@@ -151,3 +151,26 @@ def excluir_usuario():
         msg = user.deleta_usuario(usuario,senha)
         flash(msg)
         return redirect(url_for("login"))
+
+@app.route("/view_editar_jogo")
+@login_required
+def view_editar_jogo():
+        LISTA_JOGOS = lista_de_jogos()
+        index = int(request.args.get('position'))
+        jogo = LISTA_JOGOS[index]
+        return render_template("editar_jogos.html", titulo = 'Editar Jogo', jogo = jogo, index = index)
+
+@app.route("/editar_jogo",methods=['POST',])
+@login_required
+def editar_jogo():
+        LISTA_JOGOS = lista_de_jogos()
+        nome = request.form['nome']
+        print(nome)
+        categoria = request.form['categoria']
+        print(categoria)
+        console = request.form['console']
+        print(console)
+        index = int(request.form['index'])
+        jogo = LISTA_JOGOS[index].edita_jogo(nome,categoria,console)
+        flash(jogo)
+        return redirect(url_for('lista_jogos'))
