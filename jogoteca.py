@@ -143,6 +143,19 @@ def altenticar_nova_senha_user():
         msg = user.alterar_senha(usuario,senha_antiga,senha_nova)
         flash(msg)
         return redirect(url_for("login"))
+
+@app.route("/excluir_usuario",methods=['POST',])
+def excluir_usuario():
+    usuario = request.form['usuario']
+    senha = request.form['senha']
+    if usuario == '' or senha == '':
+        flash("Por gentileza adicionar usuário e senha para exclusão")
+        return redirect(url_for("login"))
+    else:
+        msg = user.deleta_usuario(usuario,senha)
+        flash(msg)
+        return redirect(url_for("login"))
+
 #Roda a aplicação
 if __name__ == "__main__":
     app.run(debug=True)

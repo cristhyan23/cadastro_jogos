@@ -65,20 +65,22 @@ class Usuario(IntegracaoBD):
                 cursor.close()
                 self.conexao.close()
 
-    def deleta_usuario(self,usuario):
+    def deleta_usuario(self,usuario,senha):
         try:
             # Criar um cursor
             cursor = self.conexao.cursor()
-
-            #Deletar usuário na tabela "login"
-            sql = "DELETE FROM login WHERE usuario = %s"
-            valores = (usuario,)
-            cursor.execute(sql, valores)
-            # Commit das mudanças
-            self.conexao.commit()
-
-            return "Usuário deletado com sucesso!"
-
+            resultado = self.autentica_usuario(usuario,senha)
+            if resultado:
+                #Deletar usuário na tabela "login"
+                sql = "DELETE FROM login WHERE usuario = %s"
+                valores = (usuario,)
+                cursor.execute(sql, valores)
+                # Commit das mudanças
+                self.conexao.commit()
+                return "Usuário deletado com sucesso!"
+            else:
+                return "Usuário não encontrado"
+            
         except mysql.connector.Error as erro:
             print("Erro ao deletar usuário:", erro)
 

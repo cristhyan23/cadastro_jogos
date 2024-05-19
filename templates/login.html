@@ -4,22 +4,38 @@
 <div class="container">
     <h1>Faça seu login</h1>
     <form method="POST" action="/autenticar">
-        <p><label>Nome de usuário:</label> <input class="form-control" type="text" name="usuario"></p>
-        <p><label>Senha:</label> <input class="form-control" type="password" name="senha"></p>
-        <p><button class="btn btn-primary" type="submit">Entrar</button></p>    
+        <p><label>Nome de usuário:</label> <input class="form-control" type="text" name="usuario" id="usuario"></p>
+        <p><label>Senha:</label> <input class="form-control" type="password" name="senha" id="senha"></p>
+        <table> 
+            <tr>
+                <th> <p><button class="btn btn-primary" type="submit">Entrar</button></p></th>    
     </form>
-
-    <table>
-        <tr>
     <form action="/cadastro_usuario">
         <th> <p><button class="btn btn-primary" type="submit">Cadastrar Usuário</button></p> </th>
     </form>
-
     <form action="/alterar_senha">
         <th> <p><button class="btn btn-primary" type="submit">Alterar Senha</button></p> </th>
+    </form>
+    <form action="/excluir_usuario" method="post" id="delete-form">
+        <th>
+        <p>
+            <!-- Campos ocultos para armazenar o usuário e senha do formulário de login -->
+            <input type="hidden" name="usuario" id="delete-usuario">
+            <input type="hidden" name="senha" id="delete-senha">
+            <button class="btn btn-primary" type="submit" onclick="copyLoginData()">Excluir Usuário</button>
+        </p>
+        </th>
     </form>
 </tr>
 </table>
 </div>
+
+<script>
+    function copyLoginData() {
+        // Copiar os valores dos campos de login para os campos ocultos no formulário de exclusão
+        document.getElementById('delete-usuario').value = document.getElementById('usuario').value;
+        document.getElementById('delete-senha').value = document.getElementById('senha').value;
+    }
+</script>
 
 {%endblock %}
